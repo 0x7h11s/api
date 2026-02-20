@@ -116,7 +116,7 @@ function restoreTvSource(convertedArray) {
     }
 
     // 1. 添加分类行：#genre# + 分类名称
-    lines.push(`${genreItem.genre.trim()}`);
+    lines.push(`${genreItem.genre.trim()}#genre#`);
 
     // 2. 遍历该分类下的所有频道，添加频道行（名称,URL）
     genreItem.source.forEach((channel) => {
