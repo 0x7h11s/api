@@ -28,6 +28,8 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git add live.json
-          git commit -m "Auto update live.json $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git add live
+          git commit -m "Auto update live $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
