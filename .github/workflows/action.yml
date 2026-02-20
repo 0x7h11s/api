@@ -41,3 +41,11 @@ jobs:
           git push origin HEAD:master --force-with-lease
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push changes to Gitee
+        if: success() 
+        run: |
+          git remote add gitee https://ox4pi:${{ secrets.GITEE_TOKEN }}@gitee.com/ox4pi/api.git
+          git push gitee master --force
+        env:
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}  
