@@ -1,0 +1,33 @@
+# 使用 GitHub Actions 实现自动每日更新
+name: update_live
+
+on:
+  schedule:
+    # - cron: '0 * * * *'
+    - cron: 0 */6 * * *
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 20.x
+      - name: npm install
+        run: |
+          npm install
+      - name: "运行脚本"
+        run: |
+          node auto.js
+
+      - name: Commit updated model
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add live.json
+          git commit -m "Auto update live.json $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git push
