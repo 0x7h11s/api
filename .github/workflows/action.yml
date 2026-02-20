@@ -3,9 +3,12 @@ name: update_live
 
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: "0 * * * *"
     # - cron: 0 */6 * * *
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -24,13 +27,18 @@ jobs:
         run: |
           node auto.js
 
-      - name: Commit updated model
+      - name: Setup Git
+        shell: bash
         run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
+          git config user.name "bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config remote.origin.url https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git config --global push.followTags true
+
+      - name: Commit and push changes
+        run: |
           git add live
           git commit -m "Auto update live $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
-          git push origin HEAD:master
+          git push origin master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
