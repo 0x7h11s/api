@@ -1,14 +1,5 @@
 {
-  "spider": "http://cdn.qiaoji8.com/fix260108.jar;md5;1fbfab3e9f1fc664a90844c488c49b25",
-  "wallpaper": "https://bing.img.run/uhd.php",
-  "lives": [
-    {
-      "group": "redirect",
-      "channels": [
-        { "name": "live", "urls": ["proxy://do=live&type=txt&ext="] }
-      ]
-    }
-  ],
+  "spider": "https://gitee.com/ox4pi/vod/raw/master/jar/Yoursmile.jar",
   "sites": [
     {
       "key": "天天",
