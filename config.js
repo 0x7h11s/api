@@ -23,27 +23,27 @@ const config = [
       //     index: 43,
       //   },
       // },
-      {
-        index: 7,
-        address: {
-          genre: "🇨🇳IPV4线路,",
-          index: 44,
-        },
-      },
-      {
-        index: 10,
-        address: {
-          genre: "🇨🇳IPV4线路,",
-          index: 39,
-        },
-      },
-      {
-        index: 13,
-        address: {
-          genre: "🇨🇳IPV4线路,",
-          index: 63,
-        },
-      },
+      // {
+      //   index: 7,
+      //   address: {
+      //     genre: "🇨🇳IPV4线路,",
+      //     index: 44,
+      //   },
+      // },
+      // {
+      //   index: 10,
+      //   address: {
+      //     genre: "🇨🇳IPV4线路,",
+      //     index: 39,
+      //   },
+      // },
+      // {
+      //   index: 13,
+      //   address: {
+      //     genre: "🇨🇳IPV4线路,",
+      //     index: 63,
+      //   },
+      // },
       // {
       //   index: 15,
       //   address: {
