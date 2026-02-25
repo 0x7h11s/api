@@ -1,14 +1,15 @@
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const config = require("./config.js");
 
-// 目标live.txt的RAW地址（必须用raw地址，不能用blob地址）
-const LIVE_TXT_URL =
-  "https://raw.githubusercontent.com/Supprise0901/TVBox_live/main/live.txt";
+const { url: LIVE_TXT_URL, rule, list } = config.find((item) => item.activate) || { url: "", rule: [], list: [] };
+
+if(!LIVE_TXT_URL) return console.error("未找到激活的配置项，请检查config.js文件中的activate字段。");
+
 // 输出的JSON文件路径（根目录的live.json）
 const OUTPUT_JSON_PATH = path.resolve(__dirname, "live");
 
-const list = ["🇨🇳组播线路,", "🇨🇳IPV4线路,"];
 /**
  * 抓取live.txt内容并转换为JSON
  */
@@ -135,6 +136,7 @@ function restoreTvSource(convertedArray) {
   return lines.join("\n");
 }
 
+/*
 function listMap(attr) {
   const newattr = [];
   list.forEach((item) => {
@@ -146,6 +148,49 @@ function listMap(attr) {
   });
   return newattr;
 }
+*/
 
-// 执行主函数
+function listMap(attr) {
+  const newattr = [];
+  const multicastItem = attr.find((item) => item.genre === list[1]) || {
+    source: [],
+  };
+  const ipv4Item = attr.find((item) => item.genre === list[2]) || {
+    source: [],
+  };
+
+  const snowballSource = JSON.parse(JSON.stringify(multicastItem.source));
+
+  rule.forEach((ruleItem) => {
+    const targetIdx = ruleItem.index - 1;
+    const sourceIdx = ruleItem.address.index - 1;
+
+    const isTargetValid = targetIdx >= 0 && targetIdx < snowballSource.length;
+    const isSourceValid = sourceIdx >= 0 && sourceIdx < ipv4Item.source.length;
+
+    if (isTargetValid && isSourceValid) {
+      snowballSource[targetIdx] = {
+        name: ipv4Item.source[sourceIdx].name,
+        url: ipv4Item.source[sourceIdx].url,
+      };
+    }
+  });
+
+  list.forEach((genre) => {
+    if (genre === list[0]) {
+      newattr.push({ genre, source: snowballSource });
+    } else {
+      const originalItem = attr.find((item) => item.genre === genre) || {
+        source: [],
+      };
+      newattr.push({
+        genre,
+        source: JSON.parse(JSON.stringify(originalItem.source)),
+      });
+    }
+  });
+
+  return newattr;
+}
+
 fetchLiveTxtAndConvertToJson();

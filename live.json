@@ -8,6 +8,12 @@
       "ua": "bingcha/1.1 (mianfeifenxiang) "
     },
     {
+      "name": "🛬┃iptv_api直播",
+      "type": 0,
+      "url": "https://daili.korice.eu.org/https://raw.githubusercontent.com/alantang1977/iptv_api/refs/heads/main/output/live_ipv4.m3u",
+      "playerType": 1
+    },
+    {
       "name": "🍺┃冰茶官方「TG直播」",
       "type": 0,
       "playerType": 2,
