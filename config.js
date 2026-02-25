@@ -1,4 +1,3 @@
-
 const config = [
   {
     name: "iptv_api",
@@ -42,7 +41,7 @@ const config = [
         index: 13,
         address: {
           genre: "🇨🇳IPV4线路,",
-          index: 22,
+          index: 63,
         },
       },
       {

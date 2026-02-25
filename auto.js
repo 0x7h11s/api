@@ -3,9 +3,16 @@ const fs = require("fs");
 const path = require("path");
 const config = require("./config.js");
 
-const { url: LIVE_TXT_URL, rule, list } = config.find((item) => item.activate) || { url: "", rule: [], list: [] };
+const {
+  url: LIVE_TXT_URL,
+  rule,
+  list,
+} = config.find((item) => item.activate) || { url: "", rule: [], list: [] };
 
-if(!LIVE_TXT_URL) return console.error("未找到激活的配置项，请检查config.js文件中的activate字段。");
+if (!LIVE_TXT_URL)
+  return console.error(
+    "未找到激活的配置项，请检查config.js文件中的activate字段。",
+  );
 
 // 输出的JSON文件路径（根目录的live.json）
 const OUTPUT_JSON_PATH = path.resolve(__dirname, "live");
@@ -190,7 +197,7 @@ function listMap(attr) {
     }
   });
 
-  return newattr;
+  return newattr.slice(0, 1);
 }
 
 fetchLiveTxtAndConvertToJson();
