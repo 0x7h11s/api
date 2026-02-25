@@ -197,7 +197,7 @@ function listMap(attr) {
     }
   });
 
-  return newattr.slice(0, 1);
+  return newattr;
 }
 
 fetchLiveTxtAndConvertToJson();

@@ -16,13 +16,13 @@ const config = [
           index: 1,
         },
       },
-      {
-        index: 5,
-        address: {
-          genre: "🇨🇳IPV4线路,",
-          index: 43,
-        },
-      },
+      //  {
+      //   index: 5,
+      //   address: {
+      //     genre: "🇨🇳IPV4线路,",
+      //     index: 43,
+      //   },
+      // },
       {
         index: 7,
         address: {
@@ -44,13 +44,13 @@ const config = [
           index: 63,
         },
       },
-      {
-        index: 15,
-        address: {
-          genre: "🇨🇳IPV4线路,",
-          index: 67,
-        },
-      },
+      // {
+      //   index: 15,
+      //   address: {
+      //     genre: "🇨🇳IPV4线路,",
+      //     index: 67,
+      //   },
+      // },
     ],
     list: ["雪球频道,", "🇨🇳组播线路,", "🇨🇳IPV4线路,"],
     activate: true,
