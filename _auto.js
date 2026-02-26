@@ -3,32 +3,49 @@ const fs = require("fs");
 const path = require("path");
 const config = require("./config.js");
 
+const {
+  url: LIVE_TXT_URL,
+  rule,
+  list,
+} = config.find((item) => item.activate) || { url: "", rule: [], list: [] };
+
+if (!LIVE_TXT_URL)
+  return console.error(
+    "未找到激活的配置项，请检查config.js文件中的activate字段。",
+  );
+
 // 输出的JSON文件路径（根目录的live.json）
 const OUTPUT_JSON_PATH = path.resolve(__dirname, "live");
-
-let dataAttr = [];
 
 /**
  * 抓取live.txt内容并转换为JSON
  */
-function fetchLiveTxt(url, name, list) {
-  return new Promise(async (resolved) => {
-    try {
-      console.log(`开始抓取${name}内容...`);
-      // 1. 抓取live.txt原始内容
-      const response = await axios.get(url, {
-        responseType: "text", // 确保获取纯文本
-        timeout: 10000, // 10秒超时
-      });
-      const liveTxtContent = response.data;
-      console.log(`成功抓取${name}内容，长度：`, liveTxtContent.length);
-      const _source = convertTvSource(liveTxtContent);
-      const _data = parseSource(_source, list);
-      resolved(_data);
-    } catch (error) {
-      console.error("执行失败：", error.message);
-    }
-  });
+async function fetchLiveTxtAndConvertToJson() {
+  try {
+    console.log("开始抓取live.txt内容...");
+    // 1. 抓取live.txt原始内容
+    const response = await axios.get(LIVE_TXT_URL, {
+      responseType: "text", // 确保获取纯文本
+      timeout: 10000, // 10秒超时
+    });
+    const liveTxtContent = response.data;
+    console.log("成功抓取live.txt内容，长度：", liveTxtContent.length);
+
+    // 2. 转换为JSON格式（两种方式可选，按需切换）
+    // 方式1：将整个文本作为字符串存入JSON（推荐，保留原格式）
+
+    const data = convertTvSource(liveTxtContent);
+    const newData = listMap(data);
+    const strData = restoreTvSource(newData);
+
+    // 3. 写入live文件（格式化输出，便于阅读）
+    fs.writeFileSync(OUTPUT_JSON_PATH, strData, "utf8");
+    console.log(`成功写入live文件：${OUTPUT_JSON_PATH}`);
+  } catch (error) {
+    console.error("执行失败：", error.message);
+    // 捕获错误后终止脚本，让Action标记失败
+    process.exit(1);
+  }
 }
 
 function convertTvSource(text) {
@@ -86,60 +103,6 @@ function convertTvSource(text) {
   return result;
 }
 
-function isObject(value) {
-  return Object.prototype.toString.call(value) === "[object Object]";
-}
-
-function parseSource(source, list) {
-  const rules = {};
-
-  const _list = list.map((listItem) => {
-    if (isObject(listItem)) {
-      const { name } = listItem;
-      rules[name] = listItem;
-      return name;
-    } else {
-      return listItem;
-    }
-  });
-
-  const _source = source
-    .filter((sourceItem) => _list.includes(sourceItem.genre))
-    .map((sourceItem) => {
-      const { genre: g, source: s } = sourceItem;
-
-      const { rule, newName, key } = rules[g] || {};
-      // console.log(rule)
-      // const _s = s.map((sItem,index)=>{
-      //     console.log(sItem)
-      // })
-
-      return {
-        ...sourceItem,
-        genre: newName || g,
-        source: s,
-      };
-    });
-
-  dataAttr = [...dataAttr, ..._source];
-}
-
-function start() {
-  config.forEach(async (configItem, configIndex) => {
-    const { url, name, list } = configItem;
-    if (!url)
-      return console.error(
-        "未找到激活的配置项，请检查config.js文件中的url字段。",
-      );
-
-    await fetchLiveTxt(url, name, list);
-
-    if (configIndex >= config.length - 1) {
-      output();
-    }
-  });
-}
-
 function restoreTvSource(convertedArray) {
   // 校验输入：如果不是数组或空数组，返回空字符串
   if (!Array.isArray(convertedArray) || convertedArray.length === 0) {
@@ -180,10 +143,16 @@ function restoreTvSource(convertedArray) {
   return lines.join("\n");
 }
 
-function output() {
-  const strData = restoreTvSource(dataAttr);
-  fs.writeFileSync(OUTPUT_JSON_PATH, strData, "utf8");
-  console.log(`成功写入live文件：${OUTPUT_JSON_PATH}`);
+function listMap(attr) {
+  const newattr = [];
+  list.forEach((item) => {
+    attr.forEach((attrItem) => {
+      if (attrItem.genre == item) {
+        newattr.push(attrItem);
+      }
+    });
+  });
+  return newattr;
 }
 
-start();
+fetchLiveTxtAndConvertToJson();
