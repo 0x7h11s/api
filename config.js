@@ -3,7 +3,6 @@ const config = [
     name: "TVBox_live",
     url: "https://raw.githubusercontent.com/Supprise0901/TVBox_live/main/live.txt",
     list: [
-      "🇨🇳组播线路,",
       {
         name: "🇨🇳组播线路,",
         newName: "雪球频道——组播线路,",
