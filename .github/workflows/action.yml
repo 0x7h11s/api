@@ -43,8 +43,8 @@ jobs:
           git commit -m "Auto update live $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
           git push origin HEAD:master --force-with-lease
 
-      - name: Push changes to Gitee
-        if: success()
-        run: |
-          git remote add gitee https://ox4pi:${{ secrets.GITEE_TOKEN }}@gitee.com/ox4pi/api.git
-          git push gitee master --force
+      # - name: Push changes to Gitee
+      #   if: success()
+      #   run: |
+      #     git remote add gitee https://ox4pi:${{ secrets.GITEE_TOKEN }}@gitee.com/ox4pi/api.git
+      #     git push gitee master --force
