@@ -135,6 +135,7 @@ function start() {
     await fetchLiveTxt(url, name, list);
 
     if (configIndex >= config.length - 1) {
+      console.log("全部抓取完毕，开始执行写入操作");
       output();
     }
   });
